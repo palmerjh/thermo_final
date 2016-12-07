@@ -35,6 +35,49 @@ def nAttempts_driver(iterations,n):
 
     return np.mean(res)
 
+def testing_flory_smartest():
+    nWalks_per_N = 10
+    Ns = [100,1000]
+    #counter = sum[nWalks_per_N * N for N in Ns]
+    R2s_by_N = []
+    for N in Ns:
+        R2s = []
+        for _ in range(nWalks_per_N):
+            walker = w.SmartestSAW()
+            for _ in range(N):
+                walker.walk()
+            R2s.append(walker.getR2())
+        R2s_by_N.append([N,np.mean(R2s),nWalks_per_N])
+
+    data2excel(R2s_by_N,'smartestSAW',multi_dim=True)
+
+'''
+def testing_flory_smartest():
+    nWalks_per_N = 100
+    Ns = [100,1000,10000]
+    Ns.sort()
+    counter = nWalks_per_N * Ns[-1]
+    R2s_by_N = [[0]]*len(Ns)
+    for _ in range(nWalks_per_N):
+        walker = w.SmartestSAW()
+        for poly in range(Ns[-1]+1):
+            res = walker.walk()
+            if res == -1:
+                print('Error occured - SmartestSAW has no valid moves')
+                break
+            if poly in Ns:
+                index = Ns.index(poly)
+                R2s_by_N[index].append(walker.getR2())
+
+    res = []
+    for poly in Ns:
+        index = Ns.index(poly)
+        res.append([poly,np.mean(R2s_by_N[index]),nWalks_per_N])
+
+
+    data2excel(res,'smartestSAW2',multi_dim=True)
+'''
+
 def testing_flory():
     results = {}
     for i in xrange(flory_sample_size):
